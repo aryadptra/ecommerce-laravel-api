@@ -5,8 +5,8 @@ namespace App\Interfaces;
 interface CategoryRepositoryInterface
 {
     public function getAll();
-    public function getById($categoryId);
-    public function delete($categoryId);
-    public function create(array $categoryDetails);
-    public function update($categoryId, array $newDetails);
+    public function getById($id);
+    public function delete($id);
+    public function create(array $params);
+    public function update($id, array $params);
 }
