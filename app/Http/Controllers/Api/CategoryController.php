@@ -55,7 +55,7 @@ class CategoryController extends Controller
             'icon' => $icon->hashName()
         ]);
 
-        $icon->storeAs('public/categories/thumbnail', $icon->hashName());
+        $category->uploadIcon($icon);
 
         $message = $category ? 'Sukses membuat kategori baru.' : 'Gagal membuat kategori baru.';
         $status = $category ? true : false;
@@ -93,17 +93,17 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, string $id)
     {
         $category = $this->categoryRepository->getById($id);
+        $icon = $request->icon;
 
         // Cek apakah ada file icon yang diupload
         if ($request->hasFile('icon')) {
             // Hapus icon lama dari storage jika ada
             if ($category->icon) {
-                Storage::delete('public/categories/thumbnail/' . $category->icon);
+                $category->deleteIcon($category->icon);
             }
 
             // Simpan icon baru ke storage
-            $icon = $request->file('icon');
-            $iconPath = $icon->storeAs('public/categories/thumbnail', $icon->hashName());
+            $category->uploadIcon($icon);
         }
 
         $params =  [
@@ -136,24 +136,9 @@ class CategoryController extends Controller
         }
 
         // Hapus icon
-        Storage::delete('public/categories/thumbnail/' . $category->icon);
-        // Gunakan metode delete untuk menghapus kategori
-        $category->delete();
+        $category->deleteIcon($category->icon);
 
         // Return success dengan Api Resource
         return new ResponseResource(true, 'Data kategori berhasil dihapus.', null);
-
-        // try {
-        //     // Hapus icon
-        //     Storage::delete('public/categories/thumbnail/' . $category->icon);
-        //     // Gunakan metode delete untuk menghapus kategori
-        //     $category->delete();
-
-        //     // Return success dengan Api Resource
-        //     return new ResponseResource(true, 'Data kategori berhasil dihapus.', null);
-        // } catch (\Exception $e) {
-        //     // Return failed dengan Api Resource dan pesan kesalahan
-        //     return new ResponseResource(false, 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage(), null);
-        // }
     }
 }
