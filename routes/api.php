@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('/categories', App\Http\Controllers\Api\CategoryController::class)->except('create');
 Route::apiResource('/products', App\Http\Controllers\Api\ProductController::class)->except('create', 'edit');
+Route::apiResource('/carts', App\Http\Controllers\Api\CartController::class)->except('create', 'edit');
 
 Route::post('/products/{id}/upload_image', [App\Http\Controllers\Api\ProductController::class, 'upload_image']);
 Route::post('/products/{id_product}/delete_image/{id}', [App\Http\Controllers\Api\ProductController::class, 'delete_image']);
